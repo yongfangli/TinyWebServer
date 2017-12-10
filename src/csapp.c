@@ -197,7 +197,6 @@ rio_writen( int fd, void *usrbuf, size_t n )
 		nleft -= nwrite;
 		bufp += nwrite;
 	}
-
 	return (n-nleft);
 }	
 
@@ -269,6 +268,7 @@ rio_readlineb( rio_t *rp, void *usrbuf, size_t maxlen )
 		else
 			return -1;		//Error
 	}
+	
 	*bufp = 0;		//Set bufp=null
 	return n;
 }
@@ -276,7 +276,7 @@ rio_readlineb( rio_t *rp, void *usrbuf, size_t maxlen )
 ssize_t Rio_readlineb(rio_t *rp, void *userbuf, size_t maxlen)
 {
 	ssize_t rc;
-	if( (rc = rio_readlineb(rp, userbuf, maxlen) < 0 ))
+	if( (rc = rio_readlineb(rp, userbuf, maxlen)) < 0 )
 		unix_error("Rio_readlineb error\n");
 	return rc;
 }
@@ -307,10 +307,11 @@ rio_readnb( rio_t *rp, void *usrbuf, size_t n )
 
 void Rio_writen(int fd, void *usrbuf, size_t n)
 {
-	if(rio_writen(fd, usrbuf, n)!=n){
+	int rc;
+	if((rc = rio_writen(fd, usrbuf, n))!=n){
 		printf("************Rio_writen error**************\n");
 		pthread_exit(NULL);	//if client closed connect then cancel this thread	
-		printf("*********thread %d closed, so this shouldn't show********\n", (int)pthread_self());
+		printf("*********thread %d closed, so this shouldn't show********\n", (unsigned long int)pthread_self());
 	}
 }
 

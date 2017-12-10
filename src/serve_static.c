@@ -4,9 +4,7 @@ void get_filetype( char *filename, char *filetype );
 
 void handler(int sig)
 {
-	printf("*******client connection has closed.***********\n");
 	pthread_exit(NULL);
-	printf("thread has killed, this shouldn't show up\b");
 }
 
 void 
@@ -24,16 +22,13 @@ serve_static( int fd, char *filename, int filesize )
 	sprintf( buf, "%sServer: Tiny Web Server\r\n", buf );
 	sprintf( buf, "%sContent-length: %d\r\n", buf, filesize );
 	sprintf( buf, "%sContent-type: %s\r\n\r\n", buf, filetype );
-	printf("---------writen header-------------\n");
 	Rio_writen( fd, buf, strlen(buf) );
 
 	//Send response body to client
 	srcfd = Open( filename, O_RDONLY, 0 );
 	srcp = Mmap( 0, filesize, PROT_READ, MAP_PRIVATE, srcfd, 0 );
 	Close( srcfd );
-	printf("-----%d---write body-------\n", (int)pthread_self());	
 	Rio_writen( fd, srcp, filesize );
-	printf("---%d----body writed-----\n", (int)pthread_self());
 	Munmap( srcp, filesize );
 }
 

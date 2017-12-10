@@ -1,6 +1,6 @@
 #include "csapp.h"
 
-void uri_router( char *uri, char *filename );
+#define ROOT "/Users/l047/Code/git/TinyWebServer"
 
 int 
 parse_uri( char *uri, char *filename, char *cgiargs )
@@ -9,7 +9,7 @@ parse_uri( char *uri, char *filename, char *cgiargs )
 
 	if( !strstr( uri, "cgi-bin" ) ){
 		strcpy( cgiargs, "" );
-		uri_router( uri, filename );
+		strcpy( filename, ROOT);
 		strcat( filename, uri );
 		if( uri[strlen(uri)-1] == '/' )
 			strcpy( filename, "../html/home.html" );
@@ -29,11 +29,4 @@ parse_uri( char *uri, char *filename, char *cgiargs )
 	}
 }
 
-void uri_router( char *uri , char *filename ){
-	memset(filename, 0, sizeof(filename));
-	if( strstr( uri, ".html" ) )
-		strcpy( filename, "../html" );
-	else 
-		strcpy( filename, ".." );
-}
 
